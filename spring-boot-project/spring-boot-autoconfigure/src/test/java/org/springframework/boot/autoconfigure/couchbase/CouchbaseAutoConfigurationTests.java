@@ -24,7 +24,6 @@ import com.couchbase.client.java.env.CouchbaseEnvironment;
 import com.couchbase.client.java.env.DefaultCouchbaseEnvironment;
 import org.junit.Test;
 
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseAutoConfiguration.CouchbaseConfiguration;
 import org.springframework.boot.autoconfigure.data.couchbase.CouchbaseDataAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -119,9 +118,7 @@ public class CouchbaseAutoConfigurationTests
 
 	@Test
 	public void customizeEnvWithCustomCouchbaseConfiguration() {
-		load(CustomCouchbaseConfiguration.class,
-				"spring.couchbase.bootstrap-hosts=localhost",
-				"spring.couchbase.env.timeouts.connect=100");
+		load(MockCouchbaseConfiguration.class);
 		assertThat(this.context.getBeansOfType(CouchbaseConfiguration.class)).hasSize(1);
 		DefaultCouchbaseEnvironment env = this.context
 				.getBean(DefaultCouchbaseEnvironment.class);
@@ -138,10 +135,10 @@ public class CouchbaseAutoConfigurationTests
 
 	@Configuration
 	@Import(CouchbaseDataAutoConfiguration.class)
-	static class CustomCouchbaseConfiguration extends CouchbaseConfiguration {
+	static class MockCouchbaseConfiguration extends CouchbaseConfiguration {
 
-		CustomCouchbaseConfiguration(CouchbaseProperties properties) {
-			super(properties);
+		MockCouchbaseConfiguration() {
+			super(new CouchbaseProperties());
 		}
 
 		@Override
